@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Here And There</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+    <!-- CK Editor -->
+    <script th:src="@{/js/ckEditor/ckeditor.js}"></script>
+    <!-- Swiper -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-element-bundle.min.js"></script>
+
+    <style>
+        swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        swiper-container {
+            width: 100%;
+            height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        swiper-slide {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .mySwiper {
+            height: 80%;
+            width: 100%;
+        }
+
+        .mySwiper2 {
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+
+        .mySwiper2 swiper-slide {
+            width: 25%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        .mySwiper2 .swiper-slide-thumb-active {
+            opacity: 1;
+        }
+
+        swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header th:replace="fragments/header :: header"></header>
+    <main>
+        <div class="row justify-content-center">
+            <div class="col-sm-5">
+                <div class="card my-5 border border-primary">
+                    <div class="card-header bg-primary text-white">
+                        게시판
+                    </div>
+                    <div class="card-body">
+                        <form id="signUp">
+                            <div class="mb-3">
+                                <label class="form-label" for="title">제목</label>
+                                <input type="text" class="form-control" id="title" name="title"
+                                       placeholder="제목"
+                                       required="required">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="content">내용</label>
+                                <textarea rows="5" cols="50" id="content" name="content">
+
+                                </textarea>
+                                <script>
+                                    var ckeditor_config = {
+                                        resize_enaleb : false,
+                                        enterMode : CKEDITOR.ENTER_BR,
+                                        shiftEnterMode : CKEDITOR.ENTER_P,
+                                        filebrowserUploadUrl : "/admin/goods/ckUpload"
+                                    };
+
+                                    CKEDITOR.replace("content", ckeditor_config);
+                                </script>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="img">사진</label>
+                                <input type="file" class="form-control" id="img" name="img" accept=".jpg, .png"
+                                       multiple>
+                            </div>
+                            <div class="mb-3" id="swiper" style="display: none">
+                                <swiper-container id="mySwiper1"
+                                                  style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
+                                                  class="mySwiper" thumbs-swiper=".mySwiper2" space-between="10"
+                                                  navigation="true">
+                                </swiper-container>
+
+                                <swiper-container id="mySwiper2" class="mySwiper2" space-between="10" slides-per-view="4"
+                                                  free-mode="true"
+                                                  watch-slides-progress="true">
+                                </swiper-container>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="user_region">지역</label>
+                                <select class="form-control" id="user_region" name="user_region">
+                                    <option th:each="region: ${regions}" th:text="${region.name}"
+                                            th:value="${region.id}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="error_msg">
+
+                            </div>
+                            <button type="submit" class="form-control btn btn-primary" id="sign_up_btn" disabled>등록
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</div>
+<script>
+    $(function () {
+        $("#img").change(function () {
+            $("#swiper").toggle();
+            if (this.files && this.files[0]) {
+                var html = "";
+                for (var i = 0; i < this.files.length; i++) {
+                    var reader = new FileReader;
+                    reader.onload = function (data) {
+                        html += "<swiper-slide>";
+                        html += "<img src='" + data.target.result + "'/>";
+                        html += "</swiper-slide>";
+                        $("#mySwiper1").html(html);
+                        $("#mySwiper2").html(html);
+                    }
+                    reader.readAsDataURL(this.files[i]);
+                }
+            }
+        });
+        $("#addItem").submit(function (e) {
+            e.preventDefault();
+
+            var form_data = new FormData();
+            var data = {};
+            $(this).find("input").each(function () {
+                var name = $(this).attr("name");
+                var value = $(this).val();
+
+                if (name) {
+                    data[name] = value;
+                }
+            });
+            var file_input = $("#img");
+            for (var i = 0; i < file_input.length; i++) {
+                if (file_input[i].files.length > 0) {
+                    for (var j = 0; j < file_input[i].files.length; j++) {
+                        console.log(" file_input[i].files[j] :::" + file_input[i].files[j]);
+
+                        form_data.append("file", $("#img")[i].files[j]);
+                    }
+                }
+            }
+            form_data.append("key", new Blob([JSON.stringify(data)], {type: "application/json"}));
+            $.ajax({
+                type: "POST",
+                url: "/mgmt/add",
+                enctype: "multipart/form-data",
+                contentType: false,
+                processData: false,
+                data: form_data,
+                success: function (response) {
+                    alert("등록완료");
+                    window.location.href = "/board/write";
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

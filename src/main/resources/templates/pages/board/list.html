@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Here And There</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+</head>
+<body>
+<div class="container">
+    <header th:replace="fragments/header :: header"></header>
+    <main>
+        <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="true" href="#">모든 글</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">인기 글</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">추천 글</a>
+                    </li>
+                    <li class="nav-item justify-content-end text-end">
+                        <a class="nav-link" href="/board/write">글 쓰기</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">asas</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">An item</li>
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</div>
+</body>
+</html>
