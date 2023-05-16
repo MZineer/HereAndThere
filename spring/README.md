@@ -1,2 +1,0 @@
-# HereAndThere
-Team Project

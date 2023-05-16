@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Getter
@@ -14,7 +15,7 @@ public class BoardVo {
     private int user_id;
     private String title;
     private String content;
-    private String img;
+    private List<ImgVo> img;
     private String status;
     private int likes;
     private LocalDateTime reg_date;

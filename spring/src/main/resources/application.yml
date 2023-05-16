@@ -12,15 +12,21 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 mybatis:
   mapper-locations: classpath:sqlmap/**/*.xml
   config-location: classpath:mybatis-config.xml
 
+
 google:
   secret:
     map:
-      key: 
+      key: AIzaSyCIxd8vZJbsaNe6RuoWdluwVNKEjxscdis
     user:
-      key: 
-      client: 
-      password: 
+      key: AIzaSyCuKTD2RFLzb-ILD4NuqpqYvDClhZMibLg
+      client: 143425051091-tajs1p4dpmuoa9aslqunl3t6gdt77esv.apps.googleusercontent.com
+      password: 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
