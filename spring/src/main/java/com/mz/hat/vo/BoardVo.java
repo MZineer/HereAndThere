@@ -12,12 +12,13 @@ import java.util.List;
 @Setter
 public class BoardVo {
     private int id;
-    private int user_id;
+    private String user_name;
     private String title;
     private String content;
-    private List<ImgVo> img;
     private String status;
     private int likes;
     private LocalDateTime reg_date;
     private LocalDateTime mod_date;
+
+    private List<ImageVo> images;
 }

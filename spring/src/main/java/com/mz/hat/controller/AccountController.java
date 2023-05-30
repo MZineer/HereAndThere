@@ -5,6 +5,7 @@ import com.mz.hat.service.UserService;
 import com.mz.hat.support.MspUtil;
 import com.mz.hat.support.annotation.MSP;
 import com.mz.hat.support.annotation.MSPSession;
+import com.mz.hat.support.interceptor.UserRole;
 import com.mz.hat.support.result.MspResult;
 import com.mz.hat.support.result.MspStatus;
 import com.mz.hat.vo.RegionVo;
@@ -100,7 +101,12 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @MSPSession(role = 1)
+    @GetMapping("/sign/profile")
+    public ModelAndView edit() {
+        return new ModelAndView("account/profile");
+    }
+
+    @MSPSession(role = UserRole.USER)
     @GetMapping("/sign/out")
     public ResponseEntity<MspResult> get_signOut(HttpSession httpSession) {
         httpSession.invalidate();

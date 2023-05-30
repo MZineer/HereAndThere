@@ -9,9 +9,21 @@
     </insert>
 
     <select id="signIn" resultType="com.mz.hat.vo.UserVo">
-        SELECT id, user_name, user_email, user_pass, user_region
+        SELECT id, user_name, user_email, user_pass, user_region, user_img, role, reg_date, mod_date
         FROM users
         WHERE user_email = #{user_email} AND user_pass = #{user_pass}
+    </select>
+
+    <select id="get_user" resultType="com.mz.hat.vo.UserVo">
+        SELECT id, user_name, user_email, user_pass, user_region, user_img, role, reg_date, mod_date
+        FROM users
+        WHERE id = #{user_id};
+    </select>
+
+    <select id="info" resultType="com.mz.hat.vo.UserVo">
+        SELECT id, user_name, user_email, user_pass, user_region, user_img, role, reg_date, mod_date
+        FROM users
+        WHERE id = #{id};
     </select>
 
     <update id="updateProfile" parameterType="com.mz.hat.vo.UserVo">

@@ -1,62 +1,48 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<nav th:fragment="nav" class="navbar navbar-expand-lg">
-    <div class="collapse navbar-collapse" id="list">
-        <ul class="navbar-nav">
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <ul class="navbar-nav flex-row">
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/family" data-set="family">
                     <i class="fa-solid fa-people-group"></i>
-                    <span class="ms-2">
-                        가족
-                    </span>
+                    <span class="ms-2">가족</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/friends" data-set="friends">
                     <i class="fa-solid fa-children"></i>
-                    <span class="ms-2">
-                        친구
-                    </span>
+                    <span class="ms-2">친구</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/couple" data-set="couple">
                     <i class="fa-solid fa-children"></i>
-                    <span class="ms-2">
-                        연인
-                    </span>
+                    <span class="ms-2">연인</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/solo" data-set="solo">
                     <i class="fa-solid fa-child-reaching"></i>
-                    <span class="ms-2">
-                        솔로
-                    </span>
+                    <span class="ms-2">솔로</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/culture" data-set="culture">
                     <i class="fa-solid fa-landmark"></i>
-                    <span class="ms-2">
-                        문화
-                    </span>
+                    <span class="ms-2">문화</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/nature" data-set="nature">
                     <i class="fa-solid fa-tree"></i>
-                    <span class="ms-2">
-                        자연
-                    </span>
+                    <span class="ms-2">자연</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link nav-bar category" href="/vacation" data-set="vacation">
                     <i class="fa-solid fa-tent"></i>
-                    <span class="ms-2">
-                        휴양
-                    </span>
+                    <span class="ms-2">휴양</span>
                 </a>
             </li>
         </ul>

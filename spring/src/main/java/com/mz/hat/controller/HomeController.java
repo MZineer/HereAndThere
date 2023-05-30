@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 @MSP
 @Slf4j
 @RestController
@@ -24,7 +26,7 @@ public class HomeController {
     @Autowired
     private ReviewService reviewService;
 
-    @Value("${google.secret.map.key}")
+    @Value("${kakao.secret.map.key}")
     private String apiKey;
 
     @GetMapping("/")
@@ -47,8 +49,12 @@ public class HomeController {
 
     @GetMapping("/error")
     public ResponseEntity<MspResult> error() {
+
         MspResult mspResult = MspUtil.makeResult("4444", "세션이 존재하지 않습니다.", null);
 
         return new ResponseEntity<>(mspResult, HttpStatus.OK);
     }
+//
+//    @GetMapping("/")
+//    public ResponseEntity<MspResult>
 }

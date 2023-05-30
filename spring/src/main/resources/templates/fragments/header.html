@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <header th:fragment="header">
-    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <img class="bi me-2" src="/img/icon.png" alt="icon" width="32" height="32">
-            </a>
-            <div class="col d-flex align-items-center">
-                <div class="input-group align-items-center">
-                    <input type="text" class="form-control" placeholder="Here And There" aria-label="Here And There"
-                           aria-describedby="search_btn">
-                    <button class="btn btn-primary" type="button" id="search_btn">검색</button>
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <a class="navbar-brand" href="/">
+                        <img class="bi me-2" src="/img/icon.png" alt="icon" width="32" height="32">
+                    </a>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="row align-items-center">
+                        <div class="col d-flex align-items-center">
+                            <div class="input-group align-items-center">
+                                <input type="text" class="form-control" placeholder="Here And There" aria-label="Here And There" aria-describedby="search_btn">
+                                <button class="btn btn-primary" type="button" id="search_btn">검색</button>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto text-center">
                     <li class="nav-item">
                         <a class="nav-link" href="/board/list">게시글</a>
                     </li>
@@ -50,7 +59,8 @@
                                 <li><a class="dropdown-item" href="/account/sign/up">회원가입</a></li>
                             </div>
                             <div th:if="${session.user != null}">
-                                <li><a class="dropdown-item" href="/account/sign/edit">내 프로필</a></li>
+                                <li th:if="${session.user.role == 'ADMIN'}"><a class="dropdown-item" href="/admin/dashboard">관리자 화면</a></li>
+                                <li><a class="dropdown-item" href="/account/sign/profile">내 프로필</a></li>
                                 <li><a class="dropdown-item">관리</a></li>
                                 <li>
                                     <hr class="dropdown-divider">

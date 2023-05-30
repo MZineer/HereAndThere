@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mz.hat.dao.TouristAttrMapper">
+    <select id="list" resultType="com.mz.hat.vo.TouristAttrVo">
+        SELECT id, category_name, region_id, name, content, road_address, parcel_address, lat, lng, tel,assigned_date, reg_date
+        FROM tourist_attrs
+    </select>
+
+    <select id="search_touristAttr" parameterType="String" resultType="com.mz.hat.vo.TouristAttrVo">
+        SELECT * FROM tourist_attrs
+        WHERE name LIKE CONCAT('%', #{word}, '%')
+    </select>
+
+    <select id="search_name" resultType="com.mz.hat.vo.TouristAttrVo">
+        SELECT id, category_name, region_id, name, content, road_address, parcel_address, lat, lng, tel,assigned_date, reg_date
+        FROM tourist_attrs
+        WHERE name = #{name}
+        LIMIT 1;
+    </select>
+</mapper>

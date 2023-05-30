@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class UserService {
+
     @Autowired
     private UserMapper userMapper;
 
@@ -29,9 +30,18 @@ public class UserService {
         if(vo == null) {
             vo = new UserVo();
         }
-        System.out.println(vo.toString());
         logger.debug("UserVo: {}", vo);
 
         return vo;
+    }
+
+    public UserVo info(int id) {
+        UserVo userVo = userMapper.info(id);
+        if(userVo == null) {
+            userVo = new UserVo();
+        }
+        logger.debug("UserVo: {}", userVo);
+
+        return userVo;
     }
 }

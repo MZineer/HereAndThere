@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mz.hat.dao.AdminMapper">
+    <select id="get_user_list" resultType="com.mz.hat.vo.UserVo">
+        SELECT id, user_name, user_email, user_region, user_img, role, reg_date, mod_date
+        FROM users
+    </select>
+
+    <select id="get_tour_list" resultType="com.mz.hat.vo.TouristAttrVo">
+        SELECT id, category_name, region_id, name, content, road_address, parcel_address, lat, lng, tel,assigned_date, reg_date
+        FROM tourist_attrs
+    </select>
+
+    <insert id="add_tour_list" parameterType="com.mz.hat.vo.TouristAttrVo">
+        INSERT INTO tourist_attrs (name, content, road_address, parcel_address, lat, lng, tel,assigned_date, reg_date)
+        VALUES (#{name}, #{content}, #{road_address}, #{parcel_address}, #{lat}, #{lng}, #{tel},#{assigned_date}, now())
+    </insert>
+</mapper>

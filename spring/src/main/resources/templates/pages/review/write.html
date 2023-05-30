@@ -24,11 +24,11 @@
                                        required="required">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="user_region">지역</label>
-                                <select class="form-control" id="user_region" name="user_region">
-                                    <option th:each="region: ${regions}" th:text="${region.name}"
-                                            th:value="${region.id}"></option>
-                                </select>
+                                <label for="tourist_list_search" class="form-label">관광지</label>
+                                <div id="route" class="mb-3"></div>
+                                <input type="text" class="form-control" id="tourist_list_search"
+                                       name="tourist_list_search" placeholder="관광지">
+                                <div id="tourist_list_search_list" class="mb-0"></div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="content">내용</label>
@@ -37,30 +37,21 @@
                                 </textarea>
                                 <script>
                                     var ckeditor_config = {
-                                        resize_enaleb : false,
-                                        enterMode : CKEDITOR.ENTER_BR,
-                                        shiftEnterMode : CKEDITOR.ENTER_P,
-                                        filebrowserUploadUrl : "/admin/goods/ckUpload"
+                                        resize_enaleb: false,
+                                        enterMode: CKEDITOR.ENTER_BR,
+                                        shiftEnterMode: CKEDITOR.ENTER_P,
+                                        filebrowserUploadUrl: "/admin/goods/ckUpload"
                                     };
 
                                     CKEDITOR.replace("content", ckeditor_config);
                                 </script>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="img">사진</label>
-                                <input type="file" class="form-control" id="img" name="img">
+                                <label class="form-label" for="file_name">사진</label>
+                                <input type="file" class="form-control" id="file_name" name="file_name" accept=".jpg, .png"
+                                       multiple>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="user_pass_check">비밀번호 확인</label>
-                                <input type="password" class="form-control" id="user_pass_check" name="user_pass_check"
-                                       placeholder="****" required="required">
-                                <p class="text-danger" id="user_pass_msg">비밀번호를 확인해주세요</p>
-                            </div>
-                            <div class="mb-3" id="error_msg">
-
-                            </div>
-                            <button type="submit" class="form-control btn btn-primary" id="sign_up_btn" disabled>등록
-                            </button>
+                            <button type="submit" class="form-control btn btn-primary">등록</button>
                         </form>
                     </div>
                 </div>
@@ -71,92 +62,81 @@
 </div>
 <script>
     $(function () {
-        $("#user_email_check").click(function () {
-            var data = {
-                user_email: $("#user_email").val()
-            };
-            var json = JSON.stringify(data);
+        $("#tourist_list_search").keyup(function () {
+            var tourist_attr = $(this).val();
+
             $.ajax({
-                type: "POST",
-                url: "/account/sign/email_check",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: json,
+                type: "GET",
+                url: "/together/write/get/tourist/" + tourist_attr,
                 success: function (response) {
-                    if (response.head.result_code === "4444" || $("#user_email").val() === "") {
-                        $("#user_email_msg").text("사용 불가한 이메일입니다.");
-                        $("#user_email_msg").removeClass("text-success").addClass("text-danger");
-                        $("#sign_up_btn").attr("disabled", "disabled");
-                    } else {
-                        $("#user_email_msg").text("사용 가능한 이메일입니다.");
-                        $("#user_email_msg").removeClass("text-danger").addClass("text-success");
-                        $("#sign_up_btn").removeAttr("disabled");
-                    }
-                }
-            });
-        });
-
-        $("#user_email").keyup(function () {
-            $("#user_email_msg").text("이메일을 확인해주세요.");
-            $("#user_email_msg").removeClass("text-success").addClass("text-danger");
-            $("#sign_up_btn").attr("disabled", "disabled");
-        });
-
-        $("#user_pass, #user_pass_check").keyup(function () {
-            var pass1 = $("#user_pass").val();
-            var pass2 = $("#user_pass_check").val();
-            if (pass1 != "" || pass2 != "") {
-                if (pass1 == pass2) {
-                    $("#user_pass_msg").text("일치");
-                    $("#user_pass_msg").removeClass("text-danger").addClass("text-success");
-                    $("#sign_up_btn").removeAttr("disabled");
-                } else {
-                    $("#user_pass_msg").text("불일치");
-                    $("#user_pass_msg").removeClass("text-success").addClass("text-danger");
-                    $("#sign_up_btn").attr("disabled", "disabled");
-                }
-            }
-        });
-
-        $("#signUp").submit(function (e) {
-            e.preventDefault();
-
-            var data = {};
-            $(this).find("input").each(function () {
-                var name = $(this).attr("name");
-                var value = $(this).val();
-
-                if (name) {
-                    data[name] = value;
-                }
-            });
-
-            $(this).find("select").each(function () {
-                var name = $(this).attr("name");
-                var value = $(this).val();
-
-                if (name) {
-                    data[name] = value;
-                }
-            });
-
-            var json = JSON.stringify(data);
-            $.ajax({
-                type: "POST",
-                url: "/account/sign/up",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: json,
-                success: function (response) {
-                    if (response.head.result_code === "9999") {
-                        var html = "<p class='text-danger'>이미 등록된 계정입니다.</p>"
-                        $("#error_msg").html(html);
-                    } else {
-                        window.location.href = "/account/sign/in";
+                    var tour_lists = response.body;
+                    var list = $("#tourist_list_search_list");
+                    list.empty();
+                    console.log(tour_lists)
+                    for (var i = 0; i < tour_lists.length; i++) {
+                        var _item = $("<div>").text(tour_lists[i].name);
+                        _item.addClass("items");
+                        list.append(_item);
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        $("#tourist_list_search_list").on("click", ".items", function () {
+            var selected = $(this).text();
+            var routes = $("#route");
+            var _route = $("<div>").text(selected);
+            routes.empty();
+            _route.addClass("route");
+            _route.attr("data-name", selected);
+            _route.attr("id", "selected");
+            routes.append(_route);
+            $("#tourist_list_search_list").empty();
+            $("#tourist_list_search").val("");
+        });
+
+        $(document).on("click", ".route", function () {
+            $(this).remove();
+        });
+
+        $("form").submit(function (e) {
+            e.preventDefault();
+
+            var form_data = new FormData();
+
+            var data = {
+                title: $("#title").val(),
+                tourist_attr_name: $("#selected").attr("data-name"),
+                content: CKEDITOR.instances.content.getData(),
+
+            };
+            var file_name = $("#file_name"); // 파일 필드에서 선택된 파일을 가져옴
+            for (var i = 0; i < file_name.length; i++) {
+                if (file_name[i].files.length > 0) {
+                    for (var j = 0; j < file_name[i].files.length; j++) {
+                        console.log(" file_name[i].files[j] :::" + file_name[i].files[j]);
+                        form_data.append("file_name", $("#file_name")[i].files[j]);
+                    }
+                }
+            }
+
+            form_data.append("review", new Blob([JSON.stringify(data)], {type: "application/json"}));
+            console.log(form_data);
+            $.ajax({
+                type: "POST",
+                url: "/review/write",
+                data: form_data,
+                contentType: false,
+                processData: false,
+                enctype: "multipart/form-data",
+                success: function (response) {
+                    console.log(response);
+                    window.location.href = "/";
+                },
+                error: function (xhr, status, error) {
                 }
             });
         });

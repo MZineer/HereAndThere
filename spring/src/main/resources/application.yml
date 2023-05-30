@@ -1,5 +1,6 @@
 server:
   port: 8888
+
 spring:
   main:
     banner-mode: off
@@ -17,10 +18,19 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+logging:
+  level:
+    root: info
+
 mybatis:
   mapper-locations: classpath:sqlmap/**/*.xml
   config-location: classpath:mybatis-config.xml
 
+kakao:
+  secret:
+    map:
+      key: f103fa2bf8d6ac153ef15b65d9a9589a
 
 google:
   secret:

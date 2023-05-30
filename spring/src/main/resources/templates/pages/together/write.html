@@ -1,10 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Here And There</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
 </head>
 <body>
+<div class="container">
+    <header th:replace="fragments/header :: header"></header>
+    <main>
+        <form>
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="제목">
+            </div>
+            <div class="mb-3">
+                <label for="user_name" class="form-label">작성자</label>
+                <input type="text" class="form-control" id="user_name" name="user_name" th:value="${session.user.user_name}" placeholder="작성자">
+                <input type="text" id="user_id" name="user_id" th:value="${session.user.id}" hidden="hidden">
+            </div>
+            <div class="mb-3">
+                <label for="region" class="form-label">지역</label>
+                <input type="text" class="form-control" id="region" name="region" placeholder="지역">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <input type="text" class="form-control" id="content" name="content" placeholder="내용">
+            </div>
+            <div class="mb-3">
+                <label for="departure_date" class="form-label">출발일</label>
+                <input type="datetime-local" class="form-control" id="departure_date" name="departure_date">
+            </div>
+            <div class="mb-3">
+                <label for="arrival_date" class="form-label">도착일</label>
+                <input type="datetime-local" class="form-control" id="arrival_date" name="arrival_date"
+                       placeholder="도착일">
+            </div>
+            <div class="mb-3">
+                <label for="tourist_list_search" class="form-label">코스</label>
+                <div id="route" class="mb-3"></div>
+                <input type="text" class="form-control" id="tourist_list_search" name="tourist_list_search" placeholder="관광지">
+                <div id="tourist_list_search_list" class="mb-0"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">등록</button>
+        </form>
+    </main>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</div>
+<script>
+    $(function () {
+        $("form").submit(function (event) {
+            event.preventDefault(); // 폼의 기본 동작 방지
+            var routes = "";
+            $("#route .route").each(function() {
+                var dataName = $(this).attr("data-name");
+                routes += dataName + " ";
+            });
 
+            console.log(routes);
+
+            // 폼 데이터 가져오기
+            var formData = {
+                title: $("#title").val(),
+                user_id: $("#user_id").val(),
+                region: $("#region").val(),
+                content: $("#content").val(),
+                departure_date: $("#departure_date").val(),
+                arrival_date: $("#arrival_date").val(),
+                routes: routes
+            };
+
+            // 가져온 데이터 콘솔에 출력 (테스트용)
+            console.log(formData);
+
+            // 폼 데이터를 서버로 전송하는 AJAX 요청 등의 로직을 추가할 수 있습니다.
+            $.ajax({
+                type: "POST",
+                url: "/together/write",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $("#tourist_list_search").keyup(function () {
+            var tourist_attr = $(this).val();
+
+            $.ajax({
+                type: "GET",
+                url: "/together/write/get/tourist/" + tourist_attr,
+                success: function (response) {
+                    var tour_lists = response.body;
+                    var list = $("#tourist_list_search_list");
+                    list.empty();
+                    console.log(tour_lists)
+                    for (var i = 0; i < tour_lists.length; i++) {
+                        var _item = $("<div>").text(tour_lists[i].name);
+                        _item.addClass("items");
+                        list.append(_item);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        $("#tourist_list_search_list").on("click", ".items", function() {
+            var selected = $(this).text();
+            var routes = $("#route");
+            var _route = $("<div>").text(selected);
+            _route.addClass("route");
+            _route.attr("data-name", selected);
+            routes.append(_route);
+            $("#tourist_list_search_list").empty();
+            $("#tourist_list_search").val("");
+        });
+
+        $(document).on("click", ".route", function() {
+            $(this).remove();
+        });
+    });
+</script>
 </body>
 </html>

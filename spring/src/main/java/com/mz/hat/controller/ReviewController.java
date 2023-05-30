@@ -6,14 +6,20 @@ import com.mz.hat.support.annotation.MSP;
 import com.mz.hat.support.result.MspResult;
 import com.mz.hat.support.result.MspStatus;
 import com.mz.hat.vo.ReviewVo;
+import com.mz.hat.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+import java.io.Console;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @MSP
 @Slf4j
@@ -31,12 +37,12 @@ public class ReviewController {
     @GetMapping("/list/get")
     public ResponseEntity<MspResult> get_list() {
         MspResult mspResult;
-        List<ReviewVo> postVos = reviewService.list();
+        List<ReviewVo> reviewVos = reviewService.list();
 
-        int postVosSize = postVos.size();
+        int reviewVoSize = reviewVos.size();
 
-        if(postVosSize > 0) {
-            mspResult = MspUtil.makeResult(MspStatus.OK, postVos);
+        if(reviewVoSize > 0) {
+            mspResult = MspUtil.makeResult(MspStatus.OK, reviewVos);
         } else {
             mspResult = MspUtil.makeResult("8888", "등록된 게시글이 없습니다.", null);
         }
@@ -44,11 +50,26 @@ public class ReviewController {
         return new ResponseEntity<>(mspResult, HttpStatus.OK);
     }
 
+    @GetMapping("/write")
+    public ModelAndView get_write() {
+        return new ModelAndView("pages/review/write");
+    }
+
     @PostMapping("/write")
-    public ResponseEntity<MspResult> post_write(@RequestBody ReviewVo reviewVo) {
+    public ResponseEntity<MspResult> post_write(@RequestPart(value = "review") Map<String, String> map,
+                                                @RequestPart(value = "file_name", required = false) List<MultipartFile> images,
+                                                HttpSession session) throws IOException {
         MspResult mspResult;
 
-        int affectRow = reviewService.write(reviewVo);
+        ReviewVo reviewVo = new ReviewVo();
+        UserVo userVo = (UserVo) session.getAttribute("user");
+        reviewVo.setTitle(map.get("title"));
+        reviewVo.setTourist_attr_name(map.get("tourist_attr_name"));
+        reviewVo.setUser_id(userVo.getId());
+        reviewVo.setContent(map.get("content"));
+
+        System.out.println(reviewVo);
+        int affectRow = reviewService.write(reviewVo, images);
 
         if(affectRow > 0) {
             mspResult = MspUtil.makeResult(MspStatus.OK, reviewVo);

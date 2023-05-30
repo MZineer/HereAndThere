@@ -16,6 +16,7 @@ public class UserVo {
     private String user_pass;
     private String user_region;
     private String user_img;
+    private String role;
     private LocalDateTime reg_date;
     private LocalDateTime mod_date;
 }

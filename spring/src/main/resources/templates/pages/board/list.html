@@ -25,27 +25,78 @@
                     </li>
                 </ul>
             </div>
-            <div class="card-body">
-                <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">asas</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">An item</li>
-                        <li class="list-group-item">A second item</li>
-                        <li class="list-group-item">A third item</li>
-                    </ul>
-                    <div class="card-body">
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                </div>
+            <div class="" id="cards">
             </div>
         </div>
     </main>
     <footer th:replace="fragments/footer :: footer"></footer>
+    <a href="write">dfsdf</a>
 </div>
+<script>
+    $(function () {
+        var page = 1;
+        function load() {
+            var isLoading = false;
+
+            if (isLoading) {
+                return;
+            }
+
+            isLoading = true;
+
+            $.ajax({
+                type: "GET",
+                url: "/board/list/get",
+                data: {
+                    page: page
+                },
+                success: function(response) {
+                    console.log(response); // 서버 응답 확인
+
+                    var body = response.body; // body 배열 가져오기
+                    var html = "";
+                    for (var i = 0; i < body.length; i++) {
+                        html += "<div class='card' style='width: 18rem;'>";
+                        if (body[i].images.length > 0) {
+                            var image_path = body[i].images[0].image_path;
+                            html += "<img src='/images/" + image_path + "' class='card-img-top' alt='...'>";
+                        } else {
+                            html += "<img src='/image/none-i.png' class='card-img-top' alt='...'>";
+                        }
+                        html += "<div class='card-body'>";
+                        html += "<h5 class='card-title'>" + (body[i].title || "") + "</h5>";
+                        html += "<p class='card-text'>" + (body[i].content || "") + "</p>";
+                        html += "</div>";
+                        html += "<ul class='list-group list-group-flush'>";
+                        html += "<li class='list-group-item'>An item</li>";
+                        html += "<li class='list-group-item'>A second item</li>";
+                        html += "<li class='list-group-item'>" + body[i].reg_date + "</li>";
+                        html += "</ul>";
+                        html += "<div class='card-body'>";
+                        html += "<a href='#' class='card-link'>자세히 보기</a>";
+                        html += "<a href='#' class='card-link'></a>";
+                        html += "</div>";
+                        html += "</div>";
+                    }
+                    $("#cards").append(html);
+                    page++; // 페이지 번호 증가
+                    isLoading = false; // 로딩 상태 변경
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        load();
+
+        $(window).scroll(function () {
+            // 스크롤이 화면 아래쪽에 위치할 때 AJAX 요청을 보냅니다.
+            if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+                load();
+            }
+        });
+    });
+</script>
 </body>
 </html>
