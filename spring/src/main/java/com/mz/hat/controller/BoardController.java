@@ -7,9 +7,7 @@ import com.mz.hat.support.MspUtil;
 import com.mz.hat.support.annotation.MSP;
 import com.mz.hat.support.result.MspResult;
 import com.mz.hat.support.result.MspStatus;
-import com.mz.hat.vo.BoardVo;
-import com.mz.hat.vo.RegionVo;
-import com.mz.hat.vo.UserVo;
+import com.mz.hat.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -91,6 +89,17 @@ public class BoardController {
         }
 
         return new ResponseEntity<>(mspResult, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ModelAndView detail(@PathVariable("id") String id, Model model) {
+        BoardVo boardVo = boardService.detail(Integer.parseInt(id));
+        List<ImageVo> imageVoList = imageService.get_image("board", boardVo.getId());
+
+        System.out.println(imageVoList.toString());
+        model.addAttribute("images", imageVoList);
+        model.addAttribute("board", boardVo);
+        return new ModelAndView("pages/board/detail");
     }
 
     @PostMapping("/{id}")

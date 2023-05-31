@@ -11,6 +11,8 @@ public interface ReviewMapper {
     List<ReviewVo> list();
     Integer write(ReviewVo reviewVo);
 
+    ReviewVo detail(int id);
+
     Integer modify(ReviewVo reviewVo);
 
     Integer delete(ReviewVo reviewVo);

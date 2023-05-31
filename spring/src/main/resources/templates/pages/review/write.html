@@ -24,11 +24,11 @@
                                        required="required">
                             </div>
                             <div class="mb-3">
-                                <label for="tourist_list_search" class="form-label">관광지</label>
+                                <label for="_tourist_list_search" class="form-label">관광지</label>
                                 <div id="route" class="mb-3"></div>
-                                <input type="text" class="form-control" id="tourist_list_search"
-                                       name="tourist_list_search" placeholder="관광지">
-                                <div id="tourist_list_search_list" class="mb-0"></div>
+                                <input type="text" class="form-control" id="_tourist_list_search"
+                                       name="_tourist_list_search" placeholder="관광지">
+                                <div id="_tourist_list_search_list" class="mb-0"></div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="content">내용</label>
@@ -62,7 +62,7 @@
 </div>
 <script>
     $(function () {
-        $("#tourist_list_search").keyup(function () {
+        $("#_tourist_list_search").keyup(function () {
             var tourist_attr = $(this).val();
 
             $.ajax({
@@ -70,7 +70,7 @@
                 url: "/together/write/get/tourist/" + tourist_attr,
                 success: function (response) {
                     var tour_lists = response.body;
-                    var list = $("#tourist_list_search_list");
+                    var list = $("#_tourist_list_search_list");
                     list.empty();
                     console.log(tour_lists)
                     for (var i = 0; i < tour_lists.length; i++) {
@@ -85,7 +85,7 @@
             });
         });
 
-        $("#tourist_list_search_list").on("click", ".items", function () {
+        $("#_tourist_list_search_list").on("click", ".items", function () {
             var selected = $(this).text();
             var routes = $("#route");
             var _route = $("<div>").text(selected);
@@ -94,8 +94,8 @@
             _route.attr("data-name", selected);
             _route.attr("id", "selected");
             routes.append(_route);
-            $("#tourist_list_search_list").empty();
-            $("#tourist_list_search").val("");
+            $("#_tourist_list_search_list").empty();
+            $("#_tourist_list_search").val("");
         });
 
         $(document).on("click", ".route", function () {

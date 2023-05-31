@@ -1,6 +1,7 @@
 package com.mz.hat.controller;
 
 import com.mz.hat.service.CategoryService;
+import com.mz.hat.service.ImageService;
 import com.mz.hat.support.MspUtil;
 import com.mz.hat.support.annotation.MSP;
 import com.mz.hat.support.result.MspResult;
@@ -27,6 +28,9 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private ImageService imageService;
+
     @GetMapping("/get")
     public ResponseEntity<MspResult> list() {
         MspResult mspResult;
@@ -46,7 +50,9 @@ public class CategoryController {
     public ResponseEntity<MspResult> get_page(@PathVariable String category_name, Model model) {
         MspResult mspResult;
         List<TouristAttrVo> category_pages = categoryService.category_page(category_name);
-
+        for(TouristAttrVo touristAttrVo: category_pages) {
+            touristAttrVo.setImg(imageService.get_image("tourist_attrs", touristAttrVo.getId()));
+        }
         int category_page_size = category_pages.size();
 
         if(category_page_size > 0) {

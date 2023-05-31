@@ -2,17 +2,21 @@ package com.mz.hat.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mz.hat.dao.AdminMapper;
+import com.mz.hat.dao.ImageMapper;
 import com.mz.hat.support.utill.JsonLoader;
-import com.mz.hat.vo.BoardVo;
-import com.mz.hat.vo.ImageVo;
-import com.mz.hat.vo.TouristAttrVo;
-import com.mz.hat.vo.UserVo;
+import com.mz.hat.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -22,6 +26,13 @@ public class AdminService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+
+    @Autowired
+    private ImageMapper imageMapper;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     public List<UserVo> get_user_list() {
         List<UserVo> userVos = adminMapper.get_user_list();
@@ -51,6 +62,42 @@ public class AdminService {
 
         return touristAttrVoList;
     }
+
+    public TouristAttrVo get_tour_detail(int id) {
+        TouristAttrVo touristAttrVo = adminMapper.get_tour_detail(id);
+        return touristAttrVo;
+    }
+
+    public int tour_modify(TouristAttrVo touristAttrVo, List<MultipartFile> images) throws IOException {
+        int affectRow = adminMapper.tour_modify(touristAttrVo);
+        int row_id = touristAttrVo.getId();
+
+        if(affectRow > 0 && images != null && !images.isEmpty()) {
+            for(MultipartFile image : images) {
+                String image_name = image.getOriginalFilename();
+                String image_path = System.currentTimeMillis() + "_" + image_name;
+
+                Resource resource = resourceLoader.getResource("classpath:static");
+                String absolute_path = resource.getFile().getAbsolutePath();
+                File directory = new File(absolute_path + "\\images");
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+                String save_path = directory.getAbsolutePath() + "\\" + image_path;
+
+                image.transferTo(new File(save_path));
+
+                ImageVo imagesVo = new ImageVo();
+                imagesVo.setImage_name(image_name);
+                imagesVo.setImage_path(image_path);
+                imagesVo.setImage_type(ImageType.tourist_attrs);
+                imagesVo.setRef_id(row_id);
+                imageMapper.insert_image(imagesVo);
+            }
+        }
+        return affectRow;
+    }
+
     public int add_tour_list() {
         try {
             JsonLoader jsonLoader = new JsonLoader(objectMapper);
@@ -75,5 +122,20 @@ public class AdminService {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public Map<String, Integer> get_cnt() {
+        Map<String, Integer> category_name_cnt = new HashMap<>();
+
+        String[] category_names = {"가족", "친구", "연인", "솔로", "문화", "자연", "휴양"};
+
+        for(String category_name: category_names) {
+            int cnt = adminMapper.get_cnt(category_name);
+            category_name_cnt.put(category_name, cnt);
+        }
+
+        category_name_cnt.put("전체", adminMapper.all_cnt());
+
+        return category_name_cnt;
     }
 }

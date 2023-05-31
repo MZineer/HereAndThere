@@ -5,6 +5,7 @@ import com.mz.hat.dao.ReviewMapper;
 import com.mz.hat.vo.ImageType;
 import com.mz.hat.vo.ImageVo;
 import com.mz.hat.vo.ReviewVo;
+import com.mz.hat.vo.TogetherVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -66,6 +67,16 @@ public class ReviewService {
 
         logger.debug("INSERT affectRow: {}", affectRow);
         return affectRow;
+    }
+
+    public ReviewVo detail(int id) {
+        ReviewVo reviewVo = reviewMapper.detail(id);
+        if (reviewVo == null) {
+            reviewVo = new ReviewVo();
+        }
+        logger.debug("get_vo: {}", reviewVo);
+
+        return reviewVo;
     }
 
     public int modify(ReviewVo reviewVo) {

@@ -15,7 +15,7 @@
             </div>
             <div class="mb-3">
                 <label for="user_name" class="form-label">작성자</label>
-                <input type="text" class="form-control" id="user_name" name="user_name" th:value="${session.user.user_name}" placeholder="작성자">
+                <input type="text" class="form-control" id="user_name" name="user_name" th:value="${session.user.user_name}" placeholder="작성자" disabled>
                 <input type="text" id="user_id" name="user_id" th:value="${session.user.id}" hidden="hidden">
             </div>
             <div class="mb-3">
@@ -36,10 +36,10 @@
                        placeholder="도착일">
             </div>
             <div class="mb-3">
-                <label for="tourist_list_search" class="form-label">코스</label>
+                <label for="_tourist_list_search" class="form-label">코스</label>
                 <div id="route" class="mb-3"></div>
-                <input type="text" class="form-control" id="tourist_list_search" name="tourist_list_search" placeholder="관광지">
-                <div id="tourist_list_search_list" class="mb-0"></div>
+                <input type="text" class="form-control" id="_tourist_list_search" name="_tourist_list_search" placeholder="관광지">
+                <div id="_tourist_list_search_list" class="mb-0"></div>
             </div>
             <button type="submit" class="btn btn-primary">등록</button>
         </form>
@@ -80,6 +80,7 @@
                 data: JSON.stringify(formData),
                 success: function (response) {
                     console.log(response);
+                    window.location.href = "/together/list";
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -87,7 +88,7 @@
             });
         });
 
-        $("#tourist_list_search").keyup(function () {
+        $("#_tourist_list_search").keyup(function () {
             var tourist_attr = $(this).val();
 
             $.ajax({
@@ -95,7 +96,7 @@
                 url: "/together/write/get/tourist/" + tourist_attr,
                 success: function (response) {
                     var tour_lists = response.body;
-                    var list = $("#tourist_list_search_list");
+                    var list = $("#_tourist_list_search_list");
                     list.empty();
                     console.log(tour_lists)
                     for (var i = 0; i < tour_lists.length; i++) {
@@ -110,15 +111,15 @@
             });
         });
 
-        $("#tourist_list_search_list").on("click", ".items", function() {
+        $("#_tourist_list_search_list").on("click", ".items", function() {
             var selected = $(this).text();
             var routes = $("#route");
             var _route = $("<div>").text(selected);
             _route.addClass("route");
             _route.attr("data-name", selected);
             routes.append(_route);
-            $("#tourist_list_search_list").empty();
-            $("#tourist_list_search").val("");
+            $("#_tourist_list_search_list").empty();
+            $("#_tourist_list_search").val("");
         });
 
         $(document).on("click", ".route", function() {

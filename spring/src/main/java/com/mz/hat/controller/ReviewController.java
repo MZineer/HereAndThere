@@ -1,16 +1,20 @@
 package com.mz.hat.controller;
 
+import com.mz.hat.service.ImageService;
 import com.mz.hat.service.ReviewService;
+import com.mz.hat.service.TouristAttrService;
+import com.mz.hat.service.UserService;
 import com.mz.hat.support.MspUtil;
 import com.mz.hat.support.annotation.MSP;
 import com.mz.hat.support.result.MspResult;
 import com.mz.hat.support.result.MspStatus;
-import com.mz.hat.vo.ReviewVo;
-import com.mz.hat.vo.UserVo;
+import com.mz.hat.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +33,18 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
+    @Autowired
+    private TouristAttrService touristAttrService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Value("${google.secret.map.key}")
+    private String apiKey;
+
     @GetMapping("/list")
     public ModelAndView list() {
         return new ModelAndView("pages/review/list");
@@ -38,7 +54,10 @@ public class ReviewController {
     public ResponseEntity<MspResult> get_list() {
         MspResult mspResult;
         List<ReviewVo> reviewVos = reviewService.list();
-
+        for(ReviewVo reviewVo: reviewVos) {
+            List<ImageVo> imageVoList = imageService.get_image("reviews", reviewVo.getId());
+            reviewVo.setImg(imageVoList);
+        }
         int reviewVoSize = reviewVos.size();
 
         if(reviewVoSize > 0) {
@@ -65,7 +84,7 @@ public class ReviewController {
         UserVo userVo = (UserVo) session.getAttribute("user");
         reviewVo.setTitle(map.get("title"));
         reviewVo.setTourist_attr_name(map.get("tourist_attr_name"));
-        reviewVo.setUser_id(userVo.getId());
+        reviewVo.setUser_name(userVo.getUser_name());
         reviewVo.setContent(map.get("content"));
 
         System.out.println(reviewVo);
@@ -78,6 +97,17 @@ public class ReviewController {
         }
 
         return new ResponseEntity<>(mspResult, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ModelAndView detail(@PathVariable("id") String id, Model model) {
+        ReviewVo reviewVo = reviewService.detail(Integer.parseInt(id));
+        List<ImageVo> imageVoList = imageService.get_image("reviews", reviewVo.getId());
+
+        model.addAttribute("images", imageVoList);
+        model.addAttribute("review", reviewVo);
+        model.addAttribute("apiKey", apiKey);
+        return new ModelAndView("pages/review/detail");
     }
 
     @PostMapping("/{id}")

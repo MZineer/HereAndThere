@@ -3,7 +3,8 @@
 <head>
     <title>Here And There</title>
     <th:block th:replace="fragments/head :: head"></th:block>
-    <script type="text/javascript" th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey}"></script>
+    <!-- GOOGLE -->
+    <script th:src="'https://maps.googleapis.com/maps/api/js?key=' + ${apiKey}"></script>
 </head>
 <body>
 <div class="container">
@@ -50,37 +51,6 @@
     <footer th:replace="fragments/footer :: footer"></footer>
 </div>
 <script>
-
-    function displayRoute(routes) {
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapOption = {
-                center: routes[0].latlng, // 지도의 중심좌표
-                level: 5 // 지도의 확대 레벨
-            };
-
-        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-
-// 마커 이미지의 이미지 주소입니다
-        var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-
-        for (var i = 0; i < routes.length; i++) {
-
-            // 마커 이미지의 이미지 크기 입니다
-            var imageSize = new kakao.maps.Size(24, 35);
-
-            // 마커 이미지를 생성합니다
-            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-            // 마커를 생성합니다
-            var marker = new kakao.maps.Marker({
-                map: map, // 마커를 표시할 지도
-                position: routes[i].latlng, // 마커를 표시할 위치
-                title: routes[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                image: markerImage // 마커 이미지
-            });
-        }
-    }
-
     $(function () {
         var route = $("#tourist_attrs_list").attr("value");
         $.ajax({
@@ -98,11 +68,31 @@
                 for (var i = 0; i < routes.length; i++) {
                     var cord = {
                         title: routes[i].name,
-                        latlng: new kakao.maps.LatLng(parseFloat(routes[i].lat), parseFloat(routes[i].lng))
+                        lat: parseFloat(routes[i].lat),
+                        lng: parseFloat(routes[i].lng)
                     }
                     routes_cord.push(cord);
                 }
-                displayRoute(routes_cord); // 경로 표시 함수 호출
+                // 표시할 위치
+                var myLatLng = {lat: routes_cord[0].lat, lng: routes_cord[0].lng};
+
+                // 지도 옵션 설정
+                var mapOptions = {
+                    zoom: 13,
+                    center: myLatLng
+                };
+
+                // 구글 맵 생성
+                var map = new google.maps.Map($("#map")[0], mapOptions);
+
+                for(var i = 0; i < routes_cord.length; i++) {
+                    // 마커 생성
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(routes_cord[i].lat, routes_cord[i].lng),
+                        map: map,
+                        title: routes_cord[i].title
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 console.error(xhr.responseText);

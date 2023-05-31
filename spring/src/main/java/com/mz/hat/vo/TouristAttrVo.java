@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Getter
@@ -20,6 +21,7 @@ public class TouristAttrVo {
     private String lat;
     private String lng;
     private String tel;
+    private List<ImageVo> img;
     private LocalDateTime assigned_date;
     private LocalDateTime reg_date;
     private LocalDateTime mod_date;

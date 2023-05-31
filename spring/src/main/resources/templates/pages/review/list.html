@@ -3,16 +3,37 @@
 <head>
     <title>Here And There</title>
     <th:block th:replace="fragments/head :: head"></th:block>
+    <style>
+        .card {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
+<div class="flex-wrap">
     <header th:replace="fragments/header :: header"></header>
-    <main>
-        <a type="button" id="write" href="/review/write">글쓰기</a>
+    <main class="container">
+        <a class="btn btn-primary" type="button" id="write" href="/review/write">글쓰기</a>
+        <div class="d-flex justify-content-center align-content-center mt-3" id="reviews">
+
+        </div>
     </main>
     <footer th:replace="fragments/footer :: footer"></footer>
 </div>
 <script>
+    function converter_date(dateString) {
+        var date = new Date(dateString);
+
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+        var hour = ("0" + date.getHours()).slice(-2);
+        var minute = ("0" + date.getMinutes()).slice(-2);
+        var second = ("0" + date.getSeconds()).slice(-2);
+
+        var new_date_time = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        return new_date_time;
+    }
     $(function () {
         $.ajax({
             type: "GET",
@@ -21,26 +42,31 @@
                 // 성공적으로 데이터를 전송한 경우 실행할 코드
                 console.log(response); // 서버 응답 확인
                 var reviews = response.body;
-                var html = "";
+                var html = "<div class='row row-cols-1 row-cols-md-1 g-4'>"
                 for (var i = 0; i < reviews.length; i++) {
                     var reivew = reviews[i];
+
                     html += "<div class='card' style='width: 18rem;'>";
-                    html += "<img src='" + reivew.image + "' class='card-img-top' alt='...'>";
+                    if(reivew.img != null) {
+                        html += "<img src='/images/" + reivew.img[0].image_path + "' class='card-img-top' alt='...'>";
+                    }
                     html += "<div class='card-body'>";
                     html += "<h5 class='card-title'>" + reivew.title + "</h5>";
                     html += "<p class='card-text'>" + reivew.content + "</p>";
                     html += "</div>";
                     html += "<ul class='list-group list-group-flush'>";
-                    html += "<li class='list-group-item'>" + reivew.reg_date + "</li>";
-                    html += "<li class='list-group-item'>" + reivew.tourist_attr_name + "</li>";
+                    html += "<li class='list-group-item'>작성자 : " + reivew.user_name + "</li>";
+                    html += "<li class='list-group-item'>관광지 : " + reivew.tourist_attr_name + "</li>";
+                    html += "<li class='list-group-item'>좋아요 : " + reivew.likes + "</li>";
                     html += "</ul>";
                     html += "<div class='card-body'>";
-                    html += "<a href='#' class='card-link'>Card link</a>";
-                    html += "<a href='#' class='card-link'>Another link</a>";
+                    html += "<p class='card-text'>" + converter_date(reivew.reg_date) + "</p>";
+                    html += "<a href='/review/" + reivew.id + "' class='card-link'>더보기</a>";
                     html += "</div>";
                     html += "</div>";
                 }
-                $("#get_list").html(html);
+                html += "</div>";
+                $("#reviews").html(html);
 
                 $("tr.align-content-center.justify-content-center.text-center").click(function() {
                     // 클릭된 tr의 id에서 게시글의 ID를 추출

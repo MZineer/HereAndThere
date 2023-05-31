@@ -13,7 +13,6 @@
         <aside th:replace="admin/fragments/aside :: aside"></aside>
     </div>
     <main class="container">
-        <button class="btn btn-primary">변경완료</button>
         <div class="form-group">
             <div>
                 <table class="table table-bordered">
@@ -52,7 +51,7 @@
                     var tour = tour_lists[i];
                     html += "<tr class='align-content-center justify-content-center text-center' id='item-" + tour.id + "'>";
                     html += "<td>" + tour.id + "</td>";
-                    html += "<td>" + tour.name + "</td>";
+                    html += "<td><a href='/admin/tour_list/" + tour.id + "'>" + tour.name + "</a></td>";
                     html += "<td>" + tour.category_name + "</td>";
                     html += "<td>" + tour.content + "</td>";
                     html += "<td>" + tour.road_address + "</td>";

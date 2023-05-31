@@ -6,7 +6,14 @@ import m.client.android.library.core.view.MainActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
+import android.os.Build;
+import android.webkit.PermissionRequest;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 /**
@@ -36,14 +43,14 @@ public class BaseActivity extends MainActivity {
 	@Override
 	public void onPageStarted (WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
+		WebSettings webSettings = view.getSettings();
+		webSettings.setBuiltInZoomControls(false);
 	}
-	
 	/**
 	 * Webview내 컨텐츠가 로드되고 난 후 호출되는 함수
 	 */
 	@Override
 	public void onPageFinished(WebView view, String url)  {
 		super.onPageFinished(view, url);
-		
 	}
 }

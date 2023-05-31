@@ -3,13 +3,22 @@ package mcore.edu.iitpsw;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
 
 import m.client.android.library.core.common.CommonLibHandler;
 import m.client.android.library.core.utils.Logger;
 import android.app.Activity;
 import android.content.res.AssetManager;
+import android.net.http.SslError;
 import android.os.Bundle;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 
 /**
@@ -39,17 +48,14 @@ public class Startup extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-  	
-
     	super.onCreate(savedInstanceState);
         ////////////////////////////////////////////////////////////////////////////////
         // - 중요 -
         // 최초 시작 Activity에 아래의 코드를 넣어야 한다. 
-        
+
         commLibHandle.processAppInit(this);
         ////////////////////////////////////////////////////////////////////////////////
 
         WebView.setWebContentsDebuggingEnabled(true);
-
     }
 }

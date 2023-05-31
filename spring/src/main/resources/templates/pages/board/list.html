@@ -5,9 +5,9 @@
     <th:block th:replace="fragments/head :: head"></th:block>
 </head>
 <body>
-<div class="container">
+<div class="flex-wrap">
     <header th:replace="fragments/header :: header"></header>
-    <main>
+    <main class="container">
         <div class="card text-center">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
@@ -59,21 +59,18 @@
                         html += "<div class='card' style='width: 18rem;'>";
                         if (body[i].images.length > 0) {
                             var image_path = body[i].images[0].image_path;
-                            html += "<img src='/images/" + image_path + "' class='card-img-top' alt='...'>";
-                        } else {
-                            html += "<img src='/image/none-i.png' class='card-img-top' alt='...'>";
+                            html += "<img src='/images/" + image_path + "' class='card-img-top' style='' alt='...'>";
                         }
                         html += "<div class='card-body'>";
                         html += "<h5 class='card-title'>" + (body[i].title || "") + "</h5>";
                         html += "<p class='card-text'>" + (body[i].content || "") + "</p>";
                         html += "</div>";
                         html += "<ul class='list-group list-group-flush'>";
-                        html += "<li class='list-group-item'>An item</li>";
-                        html += "<li class='list-group-item'>A second item</li>";
+                        html += "<li class='list-group-item'>" + body[i].user_name + "</li>";
                         html += "<li class='list-group-item'>" + body[i].reg_date + "</li>";
                         html += "</ul>";
                         html += "<div class='card-body'>";
-                        html += "<a href='#' class='card-link'>자세히 보기</a>";
+                        html += "<a href='/board/" + body[i].id + "' class='card-link'>더보기</a>";
                         html += "<a href='#' class='card-link'></a>";
                         html += "</div>";
                         html += "</div>";

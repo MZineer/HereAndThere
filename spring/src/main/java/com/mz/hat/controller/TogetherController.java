@@ -37,7 +37,7 @@ public class TogetherController {
     @Autowired
     private RouteService routeService;
 
-    @Value("${kakao.secret.map.key}")
+    @Value("${google.secret.map.key}")
     private String apiKey;
 
     @GetMapping("/list")
@@ -50,6 +50,10 @@ public class TogetherController {
         MspResult mspResult;
 
         List<TogetherVo> togetherVos = togetherService.list();
+
+        for(TogetherVo togetherVo: togetherVos) {
+            togetherVo.setUser_name(userService.info(togetherVo.getUser_id()).getUser_name());
+        }
 
         int togetherVosSize = togetherVos.size();
 
@@ -127,5 +131,13 @@ public class TogetherController {
         }
 
         return new ResponseEntity<>(mspResult, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{name}")
+    public ResponseEntity<MspResult> search_name(@PathVariable("name") String name) {
+        MspResult mspResult;
+
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

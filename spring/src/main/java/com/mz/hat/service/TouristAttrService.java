@@ -15,4 +15,8 @@ public class TouristAttrService {
     public TouristAttrVo search_name(String name) {
         return touristAttrMapper.search_name(name);
     }
+
+    public TouristAttrVo detail(int id) {
+        return touristAttrMapper.detail(id);
+    }
 }

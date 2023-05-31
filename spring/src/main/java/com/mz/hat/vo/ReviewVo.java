@@ -15,6 +15,7 @@ public class ReviewVo {
     private String title;
     private String tourist_attr_name;
     private int user_id;
+    private String user_name;
     private String content;
     private List<ImageVo> img;
     private int likes;

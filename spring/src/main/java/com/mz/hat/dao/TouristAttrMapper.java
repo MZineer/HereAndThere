@@ -10,6 +10,7 @@ import java.util.List;
 public interface TouristAttrMapper {
     List<TouristAttrVo> list();
     List<TouristAttrVo> search_touristAttr(@Param("word") String word);
-
     TouristAttrVo search_name(String name);
+
+    TouristAttrVo detail(int id);
 }

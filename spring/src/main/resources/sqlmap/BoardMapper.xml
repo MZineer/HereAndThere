@@ -10,6 +10,12 @@
         LIMIT 10;
     </select>
 
+    <select id="detail" resultType="com.mz.hat.vo.BoardVo">
+        SELECT id, user_name, title, content, status, reg_date, mod_date, likes, cate_code
+        FROM board
+        WHERE id = #{id}
+    </select>
+
     <select id="list" resultType="com.mz.hat.vo.BoardVo">
         SELECT id, user_name, title, content, status, reg_date, mod_date, likes, cate_code
         FROM board

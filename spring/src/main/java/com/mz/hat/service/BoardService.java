@@ -68,6 +68,11 @@ public class BoardService {
         return affectRow;
     }
 
+    public BoardVo detail(int id) {
+        BoardVo boardVo = boardMapper.detail(id);
+        return boardVo;
+    }
+
     public int modify(BoardVo boardVo) {
         int affectRow = boardMapper.modify(boardVo);
         logger.debug("UPDATE affectRow: {}", affectRow);

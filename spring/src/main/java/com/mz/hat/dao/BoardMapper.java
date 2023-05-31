@@ -10,6 +10,8 @@ import java.util.List;
 public interface BoardMapper {
     List<BoardVo> list(@Param("offset") int offset, @Param("page_size") int page_size);
 
+    BoardVo detail(int id);
+
     Integer write(BoardVo boardVo);
 
     Integer modify(BoardVo boardVo);
